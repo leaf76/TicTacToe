@@ -2,6 +2,7 @@ package com.leaf76.tictactoe
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -80,8 +81,17 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonReset = button_reset
         buttonReset.setOnClickListener {
-
+            resetGame()
         }
+    }
+
+    private fun resetGame() {
+        player1Points = 0
+        player2Points = 0
+
+        updatePointsText()
+        resetBoard()
+
     }
 
     private fun draw() {
@@ -114,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 buttons[i][j].text = ""
             }
         }
-
         roundCount = 0
         player1Turn = true
     }
@@ -177,5 +186,23 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "Check all done")
 
         return false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        outState.putInt("roundCount", roundCount)
+        outState.putInt("player1Points", player1Points)
+        outState.putInt("player2Points", player2Points)
+        outState.putBoolean("player1Turn", player1Turn)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        roundCount = savedInstanceState.getInt("roundCount")
+        player1Points = savedInstanceState.getInt("player1Points")
+        player2Points = savedInstanceState.getInt("player2Points")
+        player1Turn = savedInstanceState.getBoolean("player1Turn")
     }
 }
